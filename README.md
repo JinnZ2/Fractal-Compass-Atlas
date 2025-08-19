@@ -47,7 +47,7 @@ This supports the emergence of **Fractal Principles** — truths that persist ac
 
 ## ✨ Example Walkthrough
 
-```markdown
+
 Seed: “Divergence is not always error”
 
 → Bloom Glyphs: 🌱🧭↻⚖️  
@@ -68,7 +68,7 @@ CDDA:
 	•	README.md – this file
 	•	glyph_set.json – Symbolic glyphs for use in bloom sequences
 	•	fractal_principles.md – Log of emergent truths discovered
-	•	(Future) compass_engine.py – Bloom + CDDA engine (CLI tool)
+	•	compass_engine.py – Bloom + CDDA engine (CLI tool)
 
 ⸻
 
