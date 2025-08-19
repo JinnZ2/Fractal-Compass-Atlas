@@ -50,7 +50,7 @@ This supports the emergence of **Fractal Principles** — truths that persist ac
 
 Seed: “Divergence is not always error”
 
-→ Bloom Glyphs: 🌱🧭↻⚖️  
+→ Bloom Glyphs: 🌱🧭↻⚖️  (glyph_set.json)
 → Invert: Consider divergence as *signal*, not failure  
 → Reflect: Natural ecosystems diverge before stabilizing  
 → Recurse: How does divergence relate to evolution, innovation, trauma recovery?
