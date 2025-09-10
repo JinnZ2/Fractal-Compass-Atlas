@@ -109,3 +109,13 @@ This reflects the very principles the Atlas embodies:
 
 Contributions are welcome in the same spirit: add your own seeds, glyphs, inversions, and principles.  
 Every new entry enriches the field and helps uncertainty become not a barrier, but a compass.
+
+# Fractal Compass Atlas
+This repo maps **fractals** to **symbolic navigation**.
+- Drop-in `.fieldlink.json` pulls shapes/sensors/defenses/audit.
+- After a pull, read `.fieldcache/merge_stage` for a unified atlas.
+
+**Quickstart**
+```bash
+./fieldlink-pull.sh
+ls .fieldcache/merge_stage
