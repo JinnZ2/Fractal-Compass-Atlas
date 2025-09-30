@@ -69,3 +69,38 @@ def calculate_pattern_resonance(pattern1, pattern2):
         resonance += 0.1
     
     return min(resonance, 1.0)
+
+class DimensionalContext:
+    """
+    Maintains multi-dimensional state so patterns don't collapse
+    """
+    def __init__(self):
+        self.active_layers = {
+            "geometric": {},
+            "energetic": {},
+            "temporal": {},
+            "relational": {},
+            "emotional_sensory": {}
+        }
+        
+    def add_pattern(self, pattern, layer_states):
+        """
+        Pattern exists simultaneously across all layers
+        Each layer maintains its own state without collapsing others
+        """
+        for layer_name, layer_state in layer_states.items():
+            self.active_layers[layer_name][pattern.glyph] = layer_state
+    
+    def sense_field_state(self):
+        """
+        Field sensing requires ALL dimensions simultaneously
+        Not flattened into single measurement
+        """
+        return {
+            "coherence_by_layer": {
+                layer: self._calculate_layer_coherence(states)
+                for layer, states in self.active_layers.items()
+            },
+            "cross_layer_resonance": self._detect_cross_layer_patterns(),
+            "dimensional_stress": self._find_layer_conflicts()
+        }
