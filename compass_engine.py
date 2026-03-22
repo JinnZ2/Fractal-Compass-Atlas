@@ -5,7 +5,7 @@ import random
 try:
     with open("glyph_set.json", "r") as f:
         GLYPHS = json.load(f)
-except:
+except (FileNotFoundError, json.JSONDecodeError):
     GLYPHS = {
         "🌱": "growth",
         "↻": "recursion",
