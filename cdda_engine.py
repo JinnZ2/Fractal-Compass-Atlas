@@ -1,5 +1,3 @@
-import random
-
 # --- CDDA Engine: Structured Intuition Checker ---
 
 def run_cdda(theme, domains):
