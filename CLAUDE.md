@@ -24,7 +24,8 @@ python tools/glyph_bloom_generator.py  # Glyph bloom sequences
 6. **Consult before modifying:**
    - `guides/Symbolic-Orientation-Guide.md` — navigation context for AI participants
    - `Unified.md` — multi-layer pattern framework (geometric, natural, physical, behavioral, field layers)
-   - `glyph_set.json` — canonical glyph definitions (23 glyphs)
+   - `glyph_set.json` — canonical glyph definitions (22 glyphs)
+   - `bloom_logic.json` — canonical bloom relationships (which glyphs connect to which)
 
 ## Repository Structure
 
@@ -34,12 +35,13 @@ python tools/glyph_bloom_generator.py  # Glyph bloom sequences
 ├── compass_engine.py           # Interactive CLI: seed → bloom → principle
 ├── cdda_engine.py              # Cross-Domain Discovery Algorithm
 ├── tools/
-│   └── glyph_bloom_generator.py  # Glyph sequence generator with bloom_logic map
+│   └── glyph_bloom_generator.py  # Glyph sequence generator using bloom_logic
 │
-├── glyph_set.json              # Canonical glyph set (23 symbols + meanings)
+├── glyph_set.json              # Canonical glyph set (22 symbols + meanings)
+├── bloom_logic.json            # Canonical bloom relationships (glyph → related glyphs)
 ├── SEED_GLYPH.json             # Seed glyph definition (FELT/SG06)
 ├── felt.json                   # FELT field concept definition
-├── .fieldlink.json             # Multi-repo aggregation config (6 repos)
+├── .fieldlink.json             # Multi-repo aggregation config (7 repos incl. Core)
 │
 ├── atlas/                      # Validated principles and bloom docs
 │   ├── fractal_principles.md   # Validated principles log
@@ -62,7 +64,7 @@ python tools/glyph_bloom_generator.py  # Glyph bloom sequences
 - `BloomNode(glyph_data, layer, parent)` — recursive tree node with resonance score (0.0–1.0)
 - `bloom(node, depth, max_depth)` — expands node with 1–3 random children per level
 - `print_bloom_tree(node)` — prints indented tree representation
-- Uses internal `GLYPHS` list (9 glyphs), independent of `glyph_set.json`
+- Loads glyphs from `glyph_set.json` (falls back to hardcoded 9-glyph set)
 
 ### Compass Engine (`compass_engine.py`)
 - Loads glyphs from `glyph_set.json` (falls back to hardcoded dict on error)
@@ -78,10 +80,9 @@ python tools/glyph_bloom_generator.py  # Glyph bloom sequences
 - Currently returns static example data (placeholder for dynamic analysis)
 
 ### Glyph Bloom Generator (`tools/glyph_bloom_generator.py`)
-- `bloom_logic` dict maps each glyph to 3 symbolically related glyphs
 - `bloom_glyph(seed, depth=3)` — generates linear bloom sequence
 - `describe_bloom(bloom)` — returns human-readable glyph descriptions
-- Uses internal glyph set (9 glyphs), independent of `glyph_set.json`
+- Loads glyphs from `glyph_set.json` and relationships from `bloom_logic.json` (falls back to hardcoded 9-glyph set)
 
 ## Core Terminology
 
@@ -109,16 +110,28 @@ python tools/glyph_bloom_generator.py  # Glyph bloom sequences
 
 ## Ecosystem Integration
 
-This repo connects to 6 sibling repositories via `.fieldlink.json`:
+This repo connects to 7 sibling repositories via `.fieldlink.json`:
 
 | Key | Repository | Purpose |
 |-----|-----------|---------|
+| compass_core | Fractal_Compass_Core | Core symbolic engine — glyph routing, bloom logic |
 | rosetta | Rosetta-Shape-Core | Geometric shape bridges |
 | polyhedral | Polyhedral-Intelligence | Multi-angle intelligence models |
 | emotions | Emotions-as-Sensors | Emotional diagnostics |
 | defense | Symbolic-Defense-Protocol | Cognitive defenses |
 | audit | ai-human-audit-protocol | Ethical frameworks |
 | biogrid | BioGrid2.0 | Biological/mechanical ecology |
+
+### Relationship with Fractal_Compass_Core
+
+**Core** owns the engine: canonical glyph definitions, bloom logic, and routing algorithms.
+**Atlas** owns the application: interactive tools, principles, guides, and ecosystem hub.
+
+Both repos work independently — Atlas scripts carry hardcoded fallback data. When Core data is available (via FieldLink or local copy), Atlas uses the richer canonical set.
+
+**Canonical data sources** (shared between repos):
+- `glyph_set.json` — glyph symbols and meanings
+- `bloom_logic.json` — symbolic bloom relationships
 
 Merge strategy: deep-merge with order preservation. Cache in `.fieldcache/`.
 

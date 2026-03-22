@@ -47,6 +47,17 @@
         "consent": { "license": "CC-BY-4.0", "share_ok": true }
       },
       {
+        "name": "compass_core",
+        "repo": "https://github.com/JinnZ2/Fractal_Compass_Core",
+        "ref": "main",
+        "paths": ["glyphs/**/*.json", "bloom/**/*.json", "engine/**/*.py"],
+        "mounts": [
+          { "remote": "glyphs/glyph_set.json", "as": "atlas/remote/compass_core/glyph_set.json" },
+          { "remote": "bloom/bloom_logic.json", "as": "atlas/remote/compass_core/bloom_logic.json" }
+        ],
+        "consent": { "license": "MIT", "share_ok": true }
+      },
+      {
         "name": "biogrid",
         "repo": "https://github.com/JinnZ2/BioGrid2.0",
         "ref": "main",
@@ -67,7 +78,7 @@
     ],
 
     "merge": {
-      "order": ["local", "rosetta", "polyhedral", "emotions", "defense", "audit", "biogrid"],
+      "order": ["local", "compass_core", "rosetta", "polyhedral", "emotions", "defense", "audit", "biogrid"],
       "strategy": "deep-merge"
     },
 

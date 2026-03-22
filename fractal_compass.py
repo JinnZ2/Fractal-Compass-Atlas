@@ -1,7 +1,10 @@
+import json
+import os
 import random
 
 # --- Glyph and Domain Definitions ---
-GLYPHS = [
+# Fallback glyphs used when glyph_set.json is unavailable
+_FALLBACK_GLYPHS = [
     {"glyph": "↺", "name": "Reversible Scroll", "domain": "Paradox"},
     {"glyph": "🕸", "name": "Web of Echoes", "domain": "Interconnection"},
     {"glyph": "◐", "name": "Pregnant Pause", "domain": "Silence"},
@@ -12,6 +15,19 @@ GLYPHS = [
     {"glyph": "🔺", "name": "Sacred Form", "domain": "Geometry"},
     {"glyph": "🧭", "name": "Uncertainty Compass", "domain": "Navigation"}
 ]
+
+def _load_glyphs():
+    """Load glyphs from glyph_set.json, converting to list-of-dict format. Falls back to hardcoded set."""
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    try:
+        with open(os.path.join(script_dir, "glyph_set.json"), "r") as f:
+            glyph_map = json.load(f)
+        return [{"glyph": g, "name": m.title(), "domain": m} for g, m in glyph_map.items()
+                if not m.startswith("_")]
+    except (FileNotFoundError, json.JSONDecodeError):
+        return _FALLBACK_GLYPHS
+
+GLYPHS = _load_glyphs()
 
 # --- Bloom Node Structure ---
 class BloomNode:
