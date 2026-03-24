@@ -1,3 +1,10 @@
+# --- Rosetta Bridge (optional) ---
+try:
+    from rosetta_bridge import polyhedral_domains, polyhedral_families, all_shapes
+    _HAS_ROSETTA = True
+except ImportError:
+    _HAS_ROSETTA = False
+
 # --- CDDA Engine: Structured Intuition Checker ---
 
 def run_cdda(theme, domains):
@@ -13,7 +20,7 @@ def run_cdda(theme, domains):
         "What patterns distinguish healthy transformation from chaotic breakdown?"
     ]
 
-    return {
+    result = {
         "THEME": theme,
         "DOMAINS": domains,
         "CONFIDENCE": confidence,
@@ -23,6 +30,25 @@ def run_cdda(theme, domains):
         "PROBABILITY_WEIGHT": probability_weight
     }
 
+    # Enrich with Rosetta polyhedral context when available
+    if _HAS_ROSETTA:
+        principles = polyhedral_domains()
+        families = polyhedral_families()
+        shapes = all_shapes()
+        # Find shapes whose families overlap with the theme keywords
+        theme_words = set(theme.lower().split())
+        resonant = [s for s in shapes
+                    if any(f in theme_words for f in s.get("families", []))]
+        if resonant:
+            result["SHAPE_RESONANCE"] = [
+                {"shape": s["shape"], "scroll": s.get("bridge_scroll", "")}
+                for s in resonant
+            ]
+        result["POLYHEDRAL_PRINCIPLES"] = principles
+        result["POLYHEDRAL_FAMILIES"] = families
+
+    return result
+
 # --- Example Run ---
 if __name__ == "__main__":
     theme = "Layered pattern recognition enables adaptive change"
@@ -31,4 +57,7 @@ if __name__ == "__main__":
     result = run_cdda(theme, domains)
 
     for key, value in result.items():
-        print(f"{key}: {value}")
+        if isinstance(value, list) and len(value) > 5:
+            print(f"{key}: ({len(value)} items) {', '.join(str(v) for v in value[:5])}...")
+        else:
+            print(f"{key}: {value}")

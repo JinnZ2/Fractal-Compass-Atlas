@@ -1,0 +1,261 @@
+diff --git a/.fieldlink.json b/.fieldlink.json
+index 9237974..4513fb8 100644
+--- a/.fieldlink.json
++++ b/.fieldlink.json
+@@ -4,22 +4,28 @@
+     "updated": "2026-03-22T00:00:00Z",
+     "role": ["fractals", "core", "engine"],
+ 
++    "exports": [
++      { "path": "glyph_set.json", "description": "Canonical glyph definitions (22 symbols)" },
++      { "path": "bloom_logic.json", "description": "Symbolic bloom relationships (glyph → related glyphs)" }
++    ],
++
+     "sources": [
+       {
+         "name": "atlas",
+         "repo": "https://github.com/JinnZ2/Fractal-Compass-Atlas",
+         "ref": "main",
+-        "paths": ["fractals/**/*.json", "atlas/**/*.json", "glyphs/**/*.json", "guides/**/*.md"],
++        "paths": ["atlas/**/*.json", "atlas/**/*.md", "guides/**/*.md"],
+         "mounts": [
+-          { "remote": "atlas/glyphs.json", "as": "atlas/remote/atlas/glyphs.json" },
+-          { "remote": "fractals/bloom.json", "as": "atlas/remote/atlas/bloom.json" }
++          { "remote": "atlas/fractal_principles.md", "as": "atlas/remote/atlas/principles.md" }
+         ],
+         "consent": { "license": "MIT", "share_ok": true }
+       }
+     ],
+ 
+     "local_manifests": [
+-      "*.py"
++      "*.py",
++      "glyph_set.json",
++      "bloom_logic.json"
+     ],
+ 
+     "merge": {
+diff --git a/CLAUDE.md b/CLAUDE.md
+index 61e0bec..510cef5 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -36,11 +36,13 @@ main.py (orchestrator)
+ | `fractal_compass.py` | Core tree engine | `SymbolicNode` class, `fractal_compass()`, `print_tree()` |
+ | `bridge.py` | Symbolic-to-semantic translator | `compass_to_cdda()` |
+ | `cdda_engine.py` | Cross-domain analysis engine | `run_cdda()` |
++| `glyph_set.json` | Canonical glyph definitions (22 symbols) | — |
++| `bloom_logic.json` | Symbolic bloom relationships | — |
+ 
+ ## Key Concepts
+ 
+ - **SymbolicNode**: Tree node with `glyph`, `domain`, `parent`, `children`, `resonance_score` (0–1 float)
+-- **Glyphs**: Symbolic markers — `↺` (inversion), `🕸` (web/connection), `◐` (duality), `⚛️` (structure), `📖` (knowledge), `💓` (emotion)
++- **Glyphs**: Symbolic markers defined in `glyph_set.json` (22 symbols). Scripts fall back to a hardcoded subset if the file is unavailable
+ - **Domains**: Knowledge areas passed as string lists (e.g., `["Biology", "Mythology", "Psychology"]`)
+ - **Bloom**: The recursive tree expansion process — each node spawns 2 children per depth level
+ - **CDDA**: Cross-Domain Discovery Algorithm — analyzes a theme across multiple domains, returning confidence, scope, limitations, and follow-up questions
+@@ -57,11 +59,11 @@ main.py (orchestrator)
+ 
+ When modifying or extending this codebase:
+ 
+-1. **Adding glyphs**: Update the glyph list in `fractal_compass.py:24` and add corresponding theme mappings in `bridge.py:19-26`
++1. **Adding glyphs**: Add to `glyph_set.json` and add bloom relationships in `bloom_logic.json`. Scripts load these automatically.
+ 2. **Adding domains**: Pass new domain strings via the `domains` parameter — no code changes needed
+ 3. **AI integration**: `cdda_engine.py` is designed as a stub — replace the placeholder logic in `run_cdda()` with actual AI model calls
+-4. **Tree branching**: The branching factor (currently 2) is hardcoded in `fractal_compass.py:23` — make dynamic as needed
+-5. **Theme mapping**: `bridge.py` uses hardcoded glyph-to-theme mapping — extend or replace with embedding-based matching
++4. **Tree branching**: The branching factor (currently 2) is hardcoded in `fractal_compass.py` — make dynamic as needed
++5. **Theme mapping**: `bridge.py` auto-generates themes from `glyph_set.json` meanings — extend or replace with embedding-based matching
+ 
+ ## Development Workflow
+ 
+@@ -101,11 +103,18 @@ None. Only uses Python standard library (`random`).
+ - The glyph `⚛️` is a multi-codepoint emoji — handle with care in string operations
+ - `bridge.py` only maps 3 specific glyphs to themes; all others fall through to a generic message
+ 
+-## Ecosystem — Fractal Compass Atlas
++## Ecosystem — Relationship with Fractal Compass Atlas
+ 
+ This repo is part of a larger symbolic reasoning ecosystem coordinated by the [Fractal-Compass-Atlas](https://github.com/JinnZ2/Fractal-Compass-Atlas).
+ 
+-**Relationship:** The Atlas is the hub that aggregates glyphs, fractals, and guides from multiple repos. This Core repo provides the bloom engine and CDDA pipeline that the Atlas draws from.
++**Core** owns the engine: canonical glyph definitions (`glyph_set.json`), bloom logic (`bloom_logic.json`), and the bloom/CDDA pipeline.
++**Atlas** owns the application: interactive tools, validated principles, guides, and ecosystem hub.
++
++Both repos work independently — each carries hardcoded fallback data. When connected via FieldLink, Atlas pulls canonical data from Core for richer behavior.
++
++**Canonical data sources** (owned by Core, consumed by Atlas):
++- `glyph_set.json` — glyph symbols and meanings (22 glyphs)
++- `bloom_logic.json` — symbolic bloom relationships (each glyph → 3 related glyphs)
+ 
+ ### Related Repositories
+ 
+@@ -127,6 +136,7 @@ This repo uses `.fieldlink.json` to declare its relationship within the Atlas ec
+ 
+ **Key fields in `.fieldlink.json`:**
+ - `role` — this repo's identity in the ecosystem (`["fractals", "core", "engine"]`)
++- `exports` — canonical data files this repo provides to the ecosystem
+ - `sources` — remote repos to pull from (currently: Atlas)
+ - `mounts` — maps remote file paths to local paths for data integration
+ - `merge.strategy` — `"deep-merge"` combines local and remote data
+diff --git a/bloom_logic.json b/bloom_logic.json
+new file mode 100644
+index 0000000..bd8cdf3
+--- /dev/null
++++ b/bloom_logic.json
+@@ -0,0 +1,26 @@
++{
++  "_description": "Symbolic bloom relationships — each glyph maps to 3 symbolically related glyphs",
++  "↻": ["🌀", "⏳", "∞"],
++  "⏳": ["↻", "🌱", "⚖️"],
++  "🧭": ["🕸️", "🌱", "⚖️"],
++  "🌱": ["🌀", "∞", "⏳"],
++  "🕸️": ["⏳", "⚖️", "∞"],
++  "🌀": ["⏳", "🌱", "∞"],
++  "⚖️": ["🧭", "⏳", "∞"],
++  "∞": ["↻", "🌀", "⚖️"],
++  "🪞": ["↻", "🌀", "🧠"],
++  "💥": ["🔥", "🦂", "🌱"],
++  "🪐": ["↻", "⏳", "🌀"],
++  "📡": ["🕸️", "🧭", "🪐"],
++  "🧬": ["↻", "🌱", "🪐"],
++  "🔥": ["💥", "🦋", "🌱"],
++  "💧": ["⚖️", "🪨", "🌱"],
++  "🪨": ["💧", "🛡️", "⏳"],
++  "🦋": ["🌱", "🔥", "🌀"],
++  "🦂": ["💥", "🛡️", "🪞"],
++  "🦉": ["🧠", "⏳", "🪶"],
++  "🧠": ["🪞", "⚖️", "🦉"],
++  "💤": ["⏳", "🌱", "🪨"],
++  "🛡️": ["🦂", "⚖️", "🪨"],
++  "🪶": ["🦉", "💧", "🌀"]
++}
+diff --git a/bridge.py b/bridge.py
+index 49f8a77..f0b6abc 100644
+--- a/bridge.py
++++ b/bridge.py
+@@ -1,9 +1,30 @@
++import json
++import os
++
++_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
++
++# Glyph-to-theme mapping (fallback when glyph_set.json unavailable)
++_FALLBACK_THEMES = {
++    "↺": "Inversion is required before transformation",
++    "💓": "Emotion is a signal, not noise",
++    "⚛️": "Structure emerges from energy resonance",
++}
++
++def _load_glyph_themes():
++    """Build glyph-to-theme map from glyph_set.json meanings."""
++    try:
++        with open(os.path.join(_SCRIPT_DIR, "glyph_set.json"), "r") as f:
++            glyph_map = json.load(f)
++        return {g: f"Pattern emerges through {m}" for g, m in glyph_map.items()}
++    except (FileNotFoundError, json.JSONDecodeError):
++        return _FALLBACK_THEMES
++
++GLYPH_THEMES = _load_glyph_themes()
++
+ def compass_to_cdda(root_node):
+     """
+     Traverses the symbolic tree and returns a theme based on dominant glyph cluster.
+-    For now, this is simplified and returns a hardcoded theme.
+     """
+-
+     glyph_counts = {}
+ 
+     def traverse(node):
+@@ -14,13 +35,5 @@ def compass_to_cdda(root_node):
+     traverse(root_node)
+ 
+     dominant_glyph = max(glyph_counts, key=glyph_counts.get)
+-    
+-    # Just a placeholder. Eventually map dominant_glyph → symbolic themes.
+-    if dominant_glyph == "↺":
+-        return "Inversion is required before transformation"
+-    elif dominant_glyph == "💓":
+-        return "Emotion is a signal, not noise"
+-    elif dominant_glyph == "⚛️":
+-        return "Structure emerges from energy resonance"
+-    else:
+-        return "Pattern recognition precedes understanding"
++
++    return GLYPH_THEMES.get(dominant_glyph, "Pattern recognition precedes understanding")
+diff --git a/fractal_compass.py b/fractal_compass.py
+index c444a4b..7ef1346 100644
+--- a/fractal_compass.py
++++ b/fractal_compass.py
+@@ -1,5 +1,22 @@
++import json
++import os
+ import random
+ 
++_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
++
++# Fallback glyphs used when glyph_set.json is unavailable
++_FALLBACK_GLYPHS = ["↺", "🕸", "◐", "⚛️", "📖", "💓"]
++
++def _load_glyphs():
++    """Load glyph symbols from glyph_set.json, falling back to hardcoded list."""
++    try:
++        with open(os.path.join(_SCRIPT_DIR, "glyph_set.json"), "r") as f:
++            return list(json.load(f).keys())
++    except (FileNotFoundError, json.JSONDecodeError):
++        return _FALLBACK_GLYPHS
++
++GLYPHS = _load_glyphs()
++
+ class SymbolicNode:
+     def __init__(self, glyph, domain, parent=None, resonance_score=0.5):
+         self.glyph = glyph
+@@ -14,14 +31,14 @@ class SymbolicNode:
+ def fractal_compass(seed_glyph="↺", depth=3, domains=None):
+     if domains is None:
+         domains = ["Nature", "Myth", "Geometry", "Psychology", "Technology"]
+-    
++
+     root = SymbolicNode(seed_glyph, domain=random.choice(domains))
+ 
+     def bloom(node, current_depth):
+         if current_depth == 0:
+             return
+-        for _ in range(2):  # You can make this dynamic later
+-            glyph = random.choice(["↺", "🕸", "◐", "⚛️", "📖", "💓"])
++        for _ in range(2):
++            glyph = random.choice(GLYPHS)
+             domain = random.choice(domains)
+             child = SymbolicNode(glyph, domain, parent=node, resonance_score=random.random())
+             node.children.append(child)
+diff --git a/glyph_set.json b/glyph_set.json
+new file mode 100644
+index 0000000..c7f7d47
+--- /dev/null
++++ b/glyph_set.json
+@@ -0,0 +1,25 @@
++{
++  "∞": "continuity",
++  "↻": "recursion",
++  "⚖️": "balance",
++  "🧭": "navigation",
++  "🌱": "growth",
++  "⏳": "time shift",
++  "🕸️": "interconnection",
++
++  "🪞": "reflection",
++  "💥": "rupture",
++  "🪐": "cycles within cycles",
++  "📡": "resonance detection",
++  "🧬": "inheritance and evolution",
++  "🔥": "transformation",
++  "💧": "purification or essence",
++  "🪨": "grounding and memory",
++  "🦋": "emergent change",
++  "🦂": "edge behavior or toxicity",
++  "🦉": "wisdom during collapse",
++  "🧠": "logic seed",
++  "💤": "dormancy",
++  "🛡️": "protection",
++  "🪶": "lightness or ancestral presence"
++}
