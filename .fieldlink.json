@@ -11,7 +11,13 @@
         "ref": "main",
         "paths": ["shapes/**/*.json", "bridges/**/*.json", "atlas/**/*.json"],
         "mounts": [
-          { "remote": "bridges/rosetta-bridges.json", "as": "atlas/remote/rosetta/bridges.json" }
+          { "remote": "bridges/rosetta-bridges.json", "as": "atlas/remote/rosetta/bridges.json" },
+          { "remote": "shapes/tetrahedron.json", "as": "atlas/remote/rosetta/shapes/tetrahedron.json" },
+          { "remote": "shapes/cube.json", "as": "atlas/remote/rosetta/shapes/cube.json" },
+          { "remote": "shapes/octahedron.json", "as": "atlas/remote/rosetta/shapes/octahedron.json" },
+          { "remote": "shapes/dodecahedron.json", "as": "atlas/remote/rosetta/shapes/dodecahedron.json" },
+          { "remote": "shapes/icosahedron.json", "as": "atlas/remote/rosetta/shapes/icosahedron.json" },
+          { "remote": "data/essence-traits.json", "as": "atlas/remote/rosetta/essence-traits.json" }
         ],
         "consent": { "license": "CC-BY-4.0", "share_ok": true }
       },

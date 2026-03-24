@@ -2,6 +2,12 @@ import json
 import os
 import random
 
+# --- Rosetta Bridge (optional) ---
+try:
+    from rosetta_bridge import shape_context
+except ImportError:
+    shape_context = lambda g: None
+
 # --- Glyph and Domain Definitions ---
 # Fallback glyphs used when glyph_set.json is unavailable
 _FALLBACK_GLYPHS = [
@@ -39,9 +45,10 @@ class BloomNode:
         self.resonance_score = round(random.uniform(0.6, 1.0), 2)
         self.children = []
         self.parent = parent
+        self.shape_bridge = shape_context(self.glyph)
 
     def to_dict(self):
-        return {
+        d = {
             "glyph": self.glyph,
             "name": self.name,
             "domain": self.domain,
@@ -49,6 +56,9 @@ class BloomNode:
             "resonance_score": self.resonance_score,
             "children": [child.to_dict() for child in self.children]
         }
+        if self.shape_bridge:
+            d["shape_bridge"] = self.shape_bridge
+        return d
 
 # --- Bloom Logic ---
 def choose_random_glyph():
@@ -65,7 +75,10 @@ def bloom(node, depth, max_depth):
         bloom(child, depth + 1, max_depth)
 
 def print_bloom_tree(node, indent=""):
-    print(f"{indent}{node.glyph} {node.name} ({node.domain}) [Resonance: {node.resonance_score}]")
+    line = f"{indent}{node.glyph} {node.name} ({node.domain}) [Resonance: {node.resonance_score}]"
+    if node.shape_bridge:
+        line += f"  ◆ {node.shape_bridge}"
+    print(line)
     for child in node.children:
         print_bloom_tree(child, indent + "  ")
 
