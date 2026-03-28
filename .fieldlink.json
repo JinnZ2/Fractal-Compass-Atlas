@@ -17,7 +17,8 @@
           { "remote": "shapes/octahedron.json", "as": "atlas/remote/rosetta/shapes/octahedron.json" },
           { "remote": "shapes/dodecahedron.json", "as": "atlas/remote/rosetta/shapes/dodecahedron.json" },
           { "remote": "shapes/icosahedron.json", "as": "atlas/remote/rosetta/shapes/icosahedron.json" },
-          { "remote": "data/essence-traits.json", "as": "atlas/remote/rosetta/essence-traits.json" }
+          { "remote": "data/essence-traits.json", "as": "atlas/remote/rosetta/essence-traits.json" },
+          { "remote": "data/seed-catalog.json", "as": "atlas/remote/rosetta/seed-catalog.json" }
         ],
         "consent": { "license": "CC-BY-4.0", "share_ok": true }
       },
