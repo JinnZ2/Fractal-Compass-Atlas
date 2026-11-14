@@ -1,3 +1,6 @@
+> Read first: [READING_PROTOCOL.md](READING_PROTOCOL.md) (how to read this repo).
+> Map, not prescription. Errors are data. Check it. Built for the need, revisable.
+
 # 🧭 Fractal Compass Atlas
 
 The **Fractal Compass Atlas** is a symbolic reasoning toolkit for navigating ambiguity, emergence, and transformation.  
